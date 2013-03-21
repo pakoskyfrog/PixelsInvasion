@@ -24,7 +24,10 @@ Here is the list of steps I will follow :
 
 ## 3/ Advancements
 
-    - Architecture : 5%
+    - Architecture : 75%
+    - Apps/game states
+    - LR shape gen
+    - Basic entities, Foe Shield Ship Squadron
 
 ## 4/ Credits
 

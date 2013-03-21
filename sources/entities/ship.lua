@@ -58,6 +58,18 @@ function CShip:draw()
 end
 
 function CShip:update(dt)
+    -- local dt = love.timer.getDelta()
+    local dx = 250 * dt
+    
+    if love.keyboard.isDown('up') or love.keyboard.isDown('w') then
+        
+    elseif love.keyboard.isDown('down') or love.keyboard.isDown('s') then
+        
+    elseif love.keyboard.isDown('left') or love.keyboard.isDown('a') then
+        self.pos.x = self.pos.x - dx
+    elseif love.keyboard.isDown('right') or love.keyboard.isDown('d') then
+        self.pos.x = self.pos.x + dx
+    end
     
 end
 
@@ -66,7 +78,10 @@ function CShip:mousepressed(x, y, btn)
 end
 
 function CShip:keypressed(key)
-    
+    -- 123    = bullet, laser, choose bomb
+    -- space  = fire
+    -- b      = launch bomb
+
 end
 
 function CShip:mousereleased(x, y, btn)

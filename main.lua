@@ -10,6 +10,7 @@ math.randomseed(os.time())
 cd = require 'sources/lib/colorData'
 
 require 'sources/gui/actions'
+require 'sources/gui/hud'
 require 'sources/apps'
 require 'sources/mainmenu'
 require 'sources/game'
@@ -17,6 +18,10 @@ require 'sources/entities/shape'
 require 'sources/gen/conected'
 require 'sources/entities/foe'
 require 'sources/entities/ship'
+require 'sources/entities/shield'
+require 'sources/entities/squadron'
+
+require 'debug/dump'
 
 
 ------------------------

@@ -53,8 +53,8 @@ function CShape:draw()
     local sx = cx - dp*(self.width /2)
     local sy = cy - dp*(self.height/2)
     
-    love.graphics.setColor(255,255,255) -- tmp
-    -- love.graphics.setColor(self.parent.color)
+    -- love.graphics.setColor(255,255,255) -- tmp
+    love.graphics.setColor(self.parent.color or {255,255,255})
     
     for i = 1, self.height do
         for j = 1, self.width do
@@ -65,7 +65,6 @@ function CShape:draw()
             end
         end
     end
-    
 end
 
 function CShape:update(dt)
@@ -113,10 +112,11 @@ function CShape:generate()
         -- bombardiers
         self.grid,self.width,self.height = self:genSymDiag(self.size)
         
-    elseif self.kind == 'Antidiag' then
+    elseif self.kind == 'ADiag' then
         -- bombardiers
         self.grid,self.width,self.height = self:genSymAntiDiag(self.size)
-        
+    else
+        assert(false, 'CShape::Error, wrong kind')
     end
     self.generated = true
 end
@@ -125,9 +125,9 @@ function CShape:duplicate()
     --------------------
     --  This will return a full copy of the shape
     local gr = {}
-    for i = 1, #self.grid do
+    for i = 1, self.height do
         gr[i] = {}
-        for j = 1, #self.grid[1] do
+        for j = 1, self.width do
             gr[i][j] = self.grid[i][j]
         end
     end
@@ -140,6 +140,7 @@ function CShape:duplicate()
     Shape.parent = self.parent
     Shape.width  = self.width
     Shape.height = self.height
+    Shape.generated = self.generated
     
     Shape.grid = gr
     

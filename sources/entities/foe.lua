@@ -40,7 +40,7 @@ local function sizeToN(s)
     return 10
 end
 
-function CFoe:create(sender, kind, size, shape, dir)
+function CFoe:create(sender, kind, size, dir, shape)
     local Foe = {}
     setmetatable(Foe, CFoe)
     
@@ -67,6 +67,8 @@ function CFoe:create(sender, kind, size, shape, dir)
         Foe:generateShape()
     end
     
+    Foe.speed = {80*(Foe.dir=='L' and -1 or 1), 7}  -- pxls/sec
+    
     return Foe
 end
 
@@ -79,6 +81,9 @@ function CFoe:load()
 end
 
 function CFoe:draw()
+    
+    if not self.init then return end
+
     -- shield
     if self.shield then self.shield:draw() end
     
@@ -87,10 +92,15 @@ function CFoe:draw()
     
     -- charging weaponnery
     -- ???
+    
 end
 
 function CFoe:update(dt)
+    if self.shield then self.shield:update(dt) end
     
+    local dx = self.speed[1] * dt
+    local dy = self.speed[2] * dt
+    self:move(dx,dy)
 end
 
 function CFoe:mousepressed(x, y, btn)
@@ -121,25 +131,53 @@ end
 function CFoe:setPosition(x,y)
     self.pos = {x=x,y=y}
 end
-function CFoe:init(hp, wp, shieldPts)
+function CFoe:move(dx,dy)
+    local x, y = self.pos.x, self.pos.y
+    self.pos = {x=x+dx,y=y+dy}
+end
+function CFoe:initialize(hp, wp, shieldPts, shieldRegen, color)
     --------------------
     --  This init the foe, called from squadron or game
     
     self.hp = hp or 1
-    -- self.weapon = CWeapon:create(wp or 'bullet')
-    -- self.shield = CShield:create(shieldPts or 0)
+    -- self.weapon = CWeapon:create(wp or 'none')
+    self.shield = CShield:create(self, shieldPts or 0, shieldRegen or 0)
+    self.color = color or {255,255,255}
+    
     self.init = true
 end
 
+function CFoe:duplicate()
+    --------------------
+    --  This will make and return a clean copy
+    local Foe = {}
+    setmetatable(Foe, CFoe)
+    Foe.kind = self.kind
+    Foe.parent = self.parent
+    Foe:setPosition(self.pos.x, self.pos.y)
+    Foe.dir = self.dir
+    Foe.shape = self.shape:duplicate()
+    Foe.size  = self.shape.size
+    Foe.shape.parent = Foe
+    Foe.hp = self.hp
+    -- Foe.weapon = self.weapon:duplicate()
+    Foe.color = cd.copyColor(self.color)
+    Foe.shield = self.shield:duplicate()
+    Foe.shield.parent = Foe
+    Foe.speed  = {self.speed[1], self.speed[2]}
+    Foe.init = self.init
+    
+    return Foe
+end
 
 
 function CFoe:generateShape()
     --------------------
     --  This will call the generation of a new shape
     local k = ''
-    if kind == 'n' then -- normal
+    if self.kind == 'n' then -- normal
         k = 'LR'
-    elseif kind == 'b' then -- bombardier
+    elseif self.kind == 'b' then -- bombardier
         if self.dir == 'L' then k = 'ADiag'
         else k = 'Diag' end
     else -- fast
