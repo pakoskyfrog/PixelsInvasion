@@ -70,7 +70,7 @@ function CSquadron:create(sender, model, lineList)
             -- local ii = (  ) / (#lineList * Apps.w)
             foe.color = cd.evalGradientAt(grad, ii)
             
-            print(model.dir, i,j, x,y)
+            print(model.dir, i,j, x,y, foe.shape.size)
             
             
             Squadron.foes[#Squadron.foes+1] = foe

@@ -20,7 +20,7 @@ CShip.__index = CShip
 ------------------------
 --  Properties
 CShip.type = "CShip"
-CShip.pxlSize = 7
+CShip.pxlSize = 5
 
 
 ------------------------
@@ -36,6 +36,8 @@ function CShip:create(N)
     Ship.pos = {x=Apps.w/2, y=Apps.h-20-Ship.shape.height/2*Ship.pxlSize}
     Ship.speed = {250, 0}
     Ship.shield = CShield:create(Ship, 10, 0.3)
+    Ship.hp = 20
+    Ship.Hp = Ship.hp
     
     return Ship
 end

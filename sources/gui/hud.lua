@@ -63,7 +63,7 @@ function CHud:draw()
     -- selected weapon
     -- bombs + ammo left + recharging
     local hp = self.parent.ship.hp or 1 -- armor left
-    local HP = self.parent.ship.maxhp or 1 -- armor max
+    local HP = self.parent.ship.Hp or 1 -- armor max
     local sp = self.parent.ship.shield.pw or 0 -- shield left
     local SP = self.parent.ship.shield.Pw or 0 -- shield max
     

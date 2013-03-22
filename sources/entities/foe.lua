@@ -19,7 +19,7 @@ CFoe.__index = CFoe
 ------------------------
 --  Properties
 CFoe.type = "CFoe"
-CFoe.pxlSize = 7
+CFoe.pxlSize = 5
 CFoe.init = false
 
 ------------------------
@@ -27,13 +27,13 @@ CFoe.init = false
 local function sizeToN(s)
     if type(s)=='number' then return s end
     
-    if size == 's' then
+    if s == 's' then
         return math.random(9,11)
-    elseif size == 'm' then
+    elseif s == 'm' then
         return math.random(13,17)
-    elseif size == 'b' then
+    elseif s == 'b' then
         return math.random(19,25)
-    elseif size == 'S' then
+    elseif s == 'S' then
         return math.random(50,75)
     end
     
