@@ -34,6 +34,8 @@ function CShip:create(N)
     
     Ship.shape = CShape:create(Ship, 'LR', Ship.size)
     Ship.pos = {x=Apps.w/2, y=Apps.h-20-Ship.shape.height/2*Ship.pxlSize}
+    Ship.speed = {250, 0}
+    Ship.shield = CShield:create(Ship, 10, 0.3)
     
     return Ship
 end
@@ -59,7 +61,7 @@ end
 
 function CShip:update(dt)
     -- local dt = love.timer.getDelta()
-    local dx = 250 * dt
+    local dx = self.speed[1] * dt
     
     if love.keyboard.isDown('up') or love.keyboard.isDown('w') then
         
@@ -71,6 +73,8 @@ function CShip:update(dt)
         self.pos.x = self.pos.x + dx
     end
     
+    -- shield
+    if self.shield then self.shield:update(dt) end
 end
 
 function CShip:mousepressed(x, y, btn)
@@ -81,7 +85,8 @@ function CShip:keypressed(key)
     -- 123    = bullet, laser, choose bomb
     -- space  = fire
     -- b      = launch bomb
-
+    
+    -- movements are dealt with in update
 end
 
 function CShip:mousereleased(x, y, btn)

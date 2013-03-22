@@ -30,6 +30,8 @@ function CGame:create()
     local Game = {}
     setmetatable(Game, CGame)
     
+    Game.hud = CHud:create(Game)
+    
     Game.ship = CShip:create()
     Game.army = {} -- squadrons collection
     
@@ -45,14 +47,19 @@ function CGame:load()
 end
 
 function CGame:draw()
-    love.graphics.setFont(Apps.fonts.default)
-    love.graphics.setColor(255,255,255)
-    love.graphics.print('You\'re in game', 5, 5)
+    -- game's background
     
+
+    -- players's ship
     self.ship:draw()
+    
+    -- enemies
     for index, squad in ipairs(self.army) do
         squad:draw()
     end
+    
+    -- projectils
+    -- powerups
     
     -- dev codes
     -- if ss1 then
@@ -60,6 +67,9 @@ function CGame:draw()
         -- love.graphics.setColor(255,255,255)
         -- love.graphics.print('sq', 5, 400)
     -- end
+    
+    -- HUD
+    self.hud:draw()
 end
 
 function CGame:update(dt)
@@ -73,6 +83,8 @@ function CGame:update(dt)
     -- if ss1 then
         -- ss1:update(dt)
     -- end
+    
+    -- self.hud:update(dt)
 end
 
 function CGame:mousepressed(x, y, btn)
@@ -95,6 +107,10 @@ function CGame:keypressed(key)
         f2:initialize(25, 'bullet', math.random(25,50))
         self.army[1] = CSquadron:create(self, f2, {1})
         self.army[2] = CSquadron:create(self, f1, {2,3,4})
+    end
+    if key=='j' then
+        print('hitting shield')
+        self.ship.shield.pw = self.ship.shield.pw * 0.66
     end
     
 end

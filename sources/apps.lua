@@ -25,16 +25,6 @@ Apps.fonts = { default = love.graphics.newFont(24),
                tiny    = love.graphics.newFont(12),  }
 
 -- Some basic colors
--- Apps.colors = { white = cd.getNamedColor('white'),
-                -- gray  = cd.getNamedColor('gray'),
-                -- black = cd.getNamedColor('black'),
-                -- blue  = cd.getNamedColor('blue'),
-                -- red   = cd.getNamedColor('red'),
-                -- green = cd.getNamedColor('green'),
-                -- cyan    = {  0,255,255},
-                -- magenta = {255,  0,255},
-                -- yellow  = {255,255,  0},
-              -- }
 Apps.colors = {}
 Apps.colors.main_Title     = cd.getNamedColor('red')
 

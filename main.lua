@@ -11,6 +11,7 @@ cd = require 'sources/lib/colorData'
 
 require 'sources/gui/actions'
 require 'sources/gui/hud'
+require 'sources/gui/choice'
 require 'sources/apps'
 require 'sources/mainmenu'
 require 'sources/game'
