@@ -89,6 +89,14 @@ function CShip:keypressed(key)
     -- b      = launch bomb
     
     -- movements are dealt with in update
+    
+    -- star field
+    if key == 'a' or key == 'left' then
+        Apps.state.bg.dir[1] =  -0.5
+    elseif key == 'd' or key == 'right' then
+        Apps.state.bg.dir[1] =   0.5
+    end
+    
 end
 
 function CShip:mousereleased(x, y, btn)
@@ -96,7 +104,9 @@ function CShip:mousereleased(x, y, btn)
 end
 
 function CShip:keyreleased(key)
-    
+    if key == 'a' or key == 'd' or key == 'left' or key == 'right' then
+        Apps.state.bg.dir[1] =  0
+    end
 end
 
 ------------------------

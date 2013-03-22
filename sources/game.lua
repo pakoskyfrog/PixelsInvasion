@@ -30,6 +30,10 @@ function CGame:create(options)
     local Game = {}
     setmetatable(Game, CGame)
     
+    Game.bg = Cstars:create()
+    Game.bg.dir[1] =  0
+    Game.bg.dir[2] = -1
+    
     Game.hud = CHud:create(Game)
     
     -- Game.ship = CShip:create()
@@ -48,7 +52,7 @@ end
 
 function CGame:draw()
     -- game's background
-    
+    self.bg:draw()
 
     -- players's ship
     if self.ship then self.ship:draw() end
@@ -73,6 +77,8 @@ function CGame:draw()
 end
 
 function CGame:update(dt)
+    self.bg:update(dt) -- , v)
+    
     self.ship:update(dt)
     for index, squad in ipairs(self.army) do
         squad:update(dt)
@@ -110,7 +116,11 @@ function CGame:keypressed(key)
     end
     if key=='j' then
         print('hitting shield')
-        self.ship.shield.pw = self.ship.shield.pw * 0.66
+        self.ship.shield.pw = self.ship.shield.pw * 0.5
+    end
+    if key=='c' then
+        print('Changing ship')
+        Apps.state.state = CShipChoice:create(Apps.state)
     end
     
 end
@@ -120,7 +130,7 @@ function CGame:mousereleased(x, y, btn)
 end
 
 function CGame:keyreleased(key)
-    
+    self.ship:keyreleased(key)
 end
 
 ------------------------
