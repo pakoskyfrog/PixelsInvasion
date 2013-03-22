@@ -28,6 +28,8 @@ Here is the list of steps I will follow :
     - Apps/game states
     - LR shape gen
     - Basic entities, Foe Shield Ship Squadron
+    - Basic HUD
+    - Choosing ship menu
 
 ## 4/ Credits
 

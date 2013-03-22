@@ -50,15 +50,8 @@ function Actions:launchGame()
     local options = {}
     
     Apps.state = CGame:create(options)
+    Apps.state.state = CShipChoice:create(Apps.state)
 end
-
-function Actions:restartGame()
-    --------------------
-    --  re-launch a game with previous options
-    
-    Apps.state = CGame:create(Apps.state.options)
-end
-
 
 function Actions:nullUnderState()
     --------------------

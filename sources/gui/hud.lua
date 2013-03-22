@@ -56,6 +56,7 @@ function CHud:draw()
     -- love.graphics.setColor(255,255,255)
     -- love.graphics.print('HUD : You\'re in game', 5, 5)
     
+    if not self.parent.ship then return end
     
     -- retrieve infos :
     local sc = self.parent.score or 0 -- score

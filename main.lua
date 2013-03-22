@@ -9,6 +9,7 @@ math.randomseed(os.time())
 --  Dependencies
 cd = require 'sources/lib/colorData'
 
+require 'sources/gui/button'
 require 'sources/gui/actions'
 require 'sources/gui/hud'
 require 'sources/gui/choice'

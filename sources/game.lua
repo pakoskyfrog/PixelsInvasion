@@ -26,13 +26,13 @@ CGame.type = "CGame"
 
 ------------------------
 --  Constructor
-function CGame:create()
+function CGame:create(options)
     local Game = {}
     setmetatable(Game, CGame)
     
     Game.hud = CHud:create(Game)
     
-    Game.ship = CShip:create()
+    -- Game.ship = CShip:create()
     Game.army = {} -- squadrons collection
     
     return Game
@@ -51,7 +51,7 @@ function CGame:draw()
     
 
     -- players's ship
-    self.ship:draw()
+    if self.ship then self.ship:draw() end
     
     -- enemies
     for index, squad in ipairs(self.army) do

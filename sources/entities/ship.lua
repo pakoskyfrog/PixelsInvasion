@@ -34,9 +34,9 @@ function CShip:create(N)
     
     Ship.shape = CShape:create(Ship, 'LR', Ship.size)
     Ship.pos = {x=Apps.w/2, y=Apps.h-20-Ship.shape.height/2*Ship.pxlSize}
-    Ship.speed = {250, 0}
-    Ship.shield = CShield:create(Ship, 10, 0.3)
-    Ship.hp = 20
+    Ship.speed = {250-N*1.5, 0}
+    Ship.shield = CShield:create(Ship, N*3.66, 0.1)
+    Ship.hp = N*2
     Ship.Hp = Ship.hp
     
     return Ship
@@ -109,6 +109,11 @@ function CShip:getType()
     return self.type
 end
 
+function CShip:centerMe()
+    --------------------
+    --  This will position the ship at the center of its line
+    self.pos = {x=Apps.w/2, y=Apps.h-20-self.shape.height/2*self.pxlSize}
+end
 
 
 
