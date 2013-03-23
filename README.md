@@ -18,6 +18,9 @@ Here is the list of steps I will follow :
     - Make the shape generators
     - Make a stary background
     - Add user interactions with the main ship
+    - Enemis movements
+    - Projectils
+    - Event-driven collision system
     - Winning / loosing the game
     - Make a background music and sound effects
     
@@ -30,6 +33,9 @@ Here is the list of steps I will follow :
     - Basic entities, Foe Shield Ship Squadron
     - Basic HUD
     - Choosing ship menu
+    - Starfield game background
+    - Better placement on squadron generation
+    - Wall/neighbor foe collision
 
 ## 4/ Credits
 

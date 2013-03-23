@@ -111,8 +111,13 @@ function CGame:keypressed(key)
         f1:initialize(12, 'none', 0)
         local f2 = CFoe:create(self, 'n', 'm')
         f2:initialize(25, 'bullet', math.random(25,50))
-        self.army[1] = CSquadron:create(self, f2, {1})
-        self.army[2] = CSquadron:create(self, f1, {2,3,4})
+        local f3 = CFoe:create(self, 'n', 'b')
+        f3:initialize(25, 'bomb', math.random(250,500))
+        -- self.army[1] = CSquadron:create(self, f2, {1}, 4)
+        -- self.army[2] = CSquadron:create(self, f1, {2,3,4})
+        self.army[2] = CSquadron:create(self, f1, {3})
+        -- self.army[3] = CSquadron:create(self, f3, {0}, 1)
+        self.army[1] = CSquadron:create(self, f3, {2}, 2)
     end
     if key=='j' then
         print('hitting shield')
@@ -121,6 +126,12 @@ function CGame:keypressed(key)
     if key=='c' then
         print('Changing ship')
         Apps.state.state = CShipChoice:create(Apps.state)
+    end
+    if key=='t' then
+        for i = -5.5, 5.5 do
+            print(i)
+        end
+        
     end
     
 end

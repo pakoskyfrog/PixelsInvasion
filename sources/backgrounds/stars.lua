@@ -9,7 +9,7 @@ Cstars.__index = Cstars
 
 ------------------------
 --  Properties
-Cstars.N = 500
+Cstars.N = 250
 Cstars.dir = {1, 0} -- vector of direction of the virtual spaceship going through the starfield
 
 ------------------------

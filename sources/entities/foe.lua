@@ -95,12 +95,43 @@ function CFoe:draw()
     
 end
 
+function CFoe:testWall()
+    --------------------
+    --  This will test if the foe is about to collide into a wall
+    local margin = 15
+    local d = self.pxlSize * self.shape.width/2
+    local cx = self.pos.x
+    local tx, Tx
+    if self.speed[1] < 0 then
+        tx = cx - d
+        if not self.voisLeft then
+            Tx = margin
+        else
+            local vv = self.voisLeft
+            Tx = vv.pxlSize*vv.shape.width/2 + vv.pos.x + margin/2
+        end
+        return tx <= Tx
+    else
+        tx = cx + d       
+        if not self.voisRight then
+            Tx = Apps.w - margin
+        else
+            local vv = self.voisRight
+            Tx = -vv.pxlSize*vv.shape.width/2 + vv.pos.x - margin/2
+        end
+        return tx >= Tx
+    end
+end
 function CFoe:update(dt)
     if self.shield then self.shield:update(dt) end
     
     local dx = self.speed[1] * dt
     local dy = self.speed[2] * dt
     self:move(dx,dy)
+    
+    if self:testWall() then
+        self.speed[1] = -self.speed[1]
+    end
 end
 
 function CFoe:mousepressed(x, y, btn)

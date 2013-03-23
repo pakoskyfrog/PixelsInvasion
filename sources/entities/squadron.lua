@@ -26,7 +26,7 @@ CSquadron.type = "CSquadron"
 
 ------------------------
 --  Constructor
-function CSquadron:create(sender, model, lineList)
+function CSquadron:create(sender, model, lineList, Nmax)
     -- model : a CFoe to duplicate
 
     -- lineList : list of num of line filled
@@ -48,30 +48,41 @@ function CSquadron:create(sender, model, lineList)
     -- nbr of foes puttable in a line :
     local dw = model.pxlSize*model.shape.width*2
     local ni = math.floor(0.75*Apps.w/(dw))
+    local NN = Nmax or ni-1
+    local dx = 0.75*Apps.w / NN
+    local wv = (NN-1)/2 * dx
+    local sx = Apps.w/2 - wv
     local x,y
     local foe
     
     for i = 1, #lineList do
-        for j = 1, ni do
+        -- for j = -(ni-1)/2 + ((ni-1)%2)/2, (ni-1)/2 + ((ni-1)%2)/2 do
+        for j = 1, NN do
             -- fill the lines outside the screen
             if model.dir == 'L' then
                 -- start at the right side
-                x = (j-1)*dw + Apps.w
+                x = sx + (j-1)*dx + Apps.w
             else
                 -- left
-                x = (j-1)*dw - Apps.w*0.75
+                x = sx + (j-1)*dx - Apps.w
             end
             y = (lineList[i]-1)*100
             foe = model:duplicate()
             foe:setPosition(x,y)
         
             -- adjust the colors
-            local ii = ((j-1)*dw + ni*dw*(i-1) ) / (#lineList * Apps.w)
+            local ii = ((j-1)*dx + NN*dx*(i-1) ) / (#lineList * Apps.w)
             -- local ii = (  ) / (#lineList * Apps.w)
             foe.color = cd.evalGradientAt(grad, ii)
             
             print(model.dir, i,j, x,y, foe.shape.size)
             
+            -- neighbors
+            -- if j > 1 then foe.voisLeft = Squadron.foes[#Squadron.foes] end
+            if j > 1 then -- and #Squadron.foes>0
+                foe.voisLeft = Squadron.foes[#Squadron.foes]
+                Squadron.foes[#Squadron.foes].voisRight = foe
+            end
             
             Squadron.foes[#Squadron.foes+1] = foe
         end
