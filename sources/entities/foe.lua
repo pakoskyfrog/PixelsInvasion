@@ -34,7 +34,7 @@ local function sizeToN(s)
     elseif s == 'b' then
         return math.random(19,25)
     elseif s == 'S' then
-        return math.random(50,75)
+        return math.random(50,100)
     end
     
     return 10
@@ -56,6 +56,7 @@ function CFoe:create(sender, kind, size, dir, shape)
     
     Foe.kind = kind
     Foe.parent = sender
+    Foe.uid = Apps:getNextID()
     Foe.pos = {x=0, y=0}
     Foe.dir = dir or (math.random()<0.5 and 'L' or 'R')
     
@@ -67,7 +68,9 @@ function CFoe:create(sender, kind, size, dir, shape)
         Foe:generateShape()
     end
     
-    Foe.speed = {80*(Foe.dir=='L' and -1 or 1), 7}  -- pxls/sec
+    Foe.speed = {(100-0.5*Foe.size)*(Foe.dir=='L' and -1 or 1), 7}  -- pxls/sec
+    
+    Foe.events = {} -- list of events attached to the foe
     
     return Foe
 end
@@ -98,6 +101,8 @@ end
 function CFoe:testWall()
     --------------------
     --  This will test if the foe is about to collide into a wall
+    -- This isn't part of the EDCS, just a placeholder
+    
     local margin = 15
     local d = self.pxlSize * self.shape.width/2
     local cx = self.pos.x
@@ -129,9 +134,9 @@ function CFoe:update(dt)
     local dy = self.speed[2] * dt
     self:move(dx,dy)
     
-    if self:testWall() then
-        self.speed[1] = -self.speed[1]
-    end
+    -- if self:testWall() then
+        -- self.speed[1] = -self.speed[1]
+    -- end
 end
 
 function CFoe:mousepressed(x, y, btn)
@@ -198,9 +203,10 @@ function CFoe:duplicate()
     Foe.speed  = {self.speed[1], self.speed[2]}
     Foe.init = self.init
     
+    Foe.events = {}
+    
     return Foe
 end
-
 
 function CFoe:generateShape()
     --------------------
@@ -216,6 +222,155 @@ function CFoe:generateShape()
     end
     
     self.shape = CShape:create(self, k, self.size)
+end
+
+function CFoe:collide(modeQ)
+    --------------------
+    --  This function is call by the event-driven collision system
+    --  It handles changing directions of the foe against the wall or a neighbor
+    
+    modeQ = modeQ or true
+    
+    -- TODO : Consider round shape if shield is on
+    -- TODO : rework / simplify / subfunctionalize
+    
+    -- erase old event :
+    
+    
+    --  1/ old school : everybody change direction
+    if not modeQ then
+        if self.speed[1] > 0 then
+            -- right bump
+            local vois = self
+            self.events = {} -- TMP : need to be able to store more than one event
+            repeat
+                vois.speed[1] = -vois.speed[1]
+                if vois.voisLeft == nil then
+                    --  1/b/ actualize events
+                    -- vois.events[#vois.events+1]
+                    vois.events = {}
+                    vois.events[1] = {Apps.state.timing+(-vois.pos.x)/vois.speed[1], vois, vois.collide}
+                end
+                vois = vois.voisLeft
+            until vois == nil
+        else
+            -- left bump
+            local vois = self
+            self.events = {} -- TMP : need to be able to store more than one event
+            repeat
+                vois.speed[1] = -vois.speed[1]
+                if vois.voisRight == nil then
+                    --  1/b/ actualize events
+                    -- vois.events[#vois.events+1]
+                    vois.events = {}
+                    vois.events[1] = {Apps.state.timing+(Apps.w-vois.pos.x)/vois.speed[1], vois, vois.collide}
+                end
+                vois = vois.voisRight
+            until vois == nil
+        end
+        return
+    end
+    
+    
+    --  2/ new wave : change sens only when dist <= margin
+    --  TODO : modif pos.x with width and shield
+    if self.speed[1] > 0 then
+        -- right bump
+        self.events = {} -- TMP : need to be able to store more than one event
+        self.speed[1] = -self.speed[1]
+        local vR = self.voisRight   -- hit now
+        if vR then
+            -- a foe
+            vR.speed[1] = -vR.speed[1]
+            local vRR = vR.voisRight
+            local dR
+            local sR = vR.speed[1]
+            if vRR then
+                -- a foe
+                dR = vRR.pos.x - vR.pos.x
+                sR = sR - vRR.speed[1]
+            else
+                -- the wall
+                dR = Apps.w - vR.pos.x
+            end
+            -- make event with vR
+            local tR = dR/sR
+            if sR > 0 then
+                -- vR.events[#vR.events+1]
+                vR.events = {}
+                vR.events[1] = {Apps.state.timing+tR, vR, vR.collide}
+            end
+        else
+            -- the wall : nothing to do, it won't move
+        end
+        local vL = self.voisLeft    -- future hit
+        local dL
+        local sL = self.speed[1]
+        if vL then
+            -- a foe
+            dL = vL.pos.x - self.pos.x
+            sL = sL - vL.speed[1]
+        else
+            -- the wall
+            dL = 0 - self.pos.x
+        end
+        -- make event with vL
+        local tL = dL/sL -- both are negative so tL > 0
+        if sL < 0 then
+            -- vL.events[#vR.events+1]
+            self.events = {}
+            self.events[1] = {Apps.state.timing+tL, self, self.collide}
+        end
+    else
+        -- left bump
+        self.events = {} -- TMP : need to be able to store more than one event
+        self.speed[1] = -self.speed[1]
+        local vL = self.voisLeft   -- hit now
+        if vL then
+            -- a foe
+            vL.speed[1] = -vL.speed[1]
+            local vLL = vL.voisLeft
+            local dL
+            local sL = vL.speed[1]
+            if vLL then
+                -- a foe
+                dL = vLL.pos.x - vL.pos.x
+                sL = sL - vLL.speed[1]
+            else
+                -- the wall
+                dL = 0 - vL.pos.x
+            end
+            -- make event with vR
+            local tL = dL/sL -- both are negative so tL > 0
+            if sL < 0 then
+                -- vR.events[#vR.events+1]
+                vL.events = {}
+                vL.events[1] = {Apps.state.timing+tL, vL, vL.collide}
+            end
+        else
+            -- the wall : nothing to do, it won't move
+        end
+        local vR = self.voisRight   -- future hit
+        local dR
+        local sR = self.speed[1]
+        if vR then
+            -- a foe
+            dR = vR.pos.x - self.pos.x
+            sR = sR - vR.speed[1]
+        else
+            -- the wall
+            dR = Apps.w - self.pos.x
+        end
+        -- make event with vL
+        local tR = dR/sR
+        if sR > 0 then
+            -- vL.events[#vR.events+1]
+            self.events = {}
+            self.events[1] = {Apps.state.timing+tR, self, self.collide}
+        end
+    end
+    
+    Apps.state:findNextEvent()
 end
 
 

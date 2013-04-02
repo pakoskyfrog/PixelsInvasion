@@ -22,6 +22,8 @@ CShield.__index = CShield
 --  Properties
 CShield.type = "CShield"
 CShield.color = {"regular", cd.getNamedColor('darkCyan'), cd.getNamedColor('cyan'), cd.getNamedColor('yellow'), cd.getNamedColor('magenta'), cd.getNamedColor('darkMagenta') }
+CShield.timeToRegenEmpty = 10 -- this is the time the shield has to wait before starting to regen when empty
+CShield.timeToRegen      = 3  -- this is the time the shield has to wait before starting to regen when just hit
 
 ------------------------
 --  Constructor
@@ -29,6 +31,7 @@ function CShield:create(sender, power, regen)
     -- regen is a % of the power max per second
     local Shield = {}
     setmetatable(Shield, CShield)
+    Shield.uid = Apps:getNextID()
     
     Shield.parent = sender
     -- for now it's a circle
@@ -42,6 +45,9 @@ function CShield:create(sender, power, regen)
     Shield.Pw = power -- const = power max
     
     Shield.regen = regen or 0
+    
+    Shield.timer =  0
+    Shield.hitOn = -1
     
     return Shield
 end
@@ -75,10 +81,14 @@ function CShield:draw()
 end
 
 function CShield:update(dt)
+    self.timer = self.timer + dt
+
     -- regen
-    self.pw = self.pw + dt * self.regen * self.Pw
-    self.pw = math.min(self.pw, self.Pw)
-    self.pw = math.max(self.pw, 0)
+    if (self.hitOn + self.timeToRegen < self.timer and self.pw > 0) or (self.hitOn + self.timeToRegenEmpty < self.timer and self.pw == 0) then
+        self.pw = self.pw + dt * self.regen * self.Pw
+        self.pw = math.min(self.pw, self.Pw)
+        self.pw = math.max(self.pw, 0)
+    end
 end
 
 function CShield:mousepressed(x, y, btn)
@@ -138,7 +148,27 @@ function CShield:duplicate()
     
     Shield.regen = self.regen
     
+    Shield.hitOn = self.hitOn
+    Shield.timer = self.timer
+    
     return Shield
+end
+
+function CShield:hitMe(dmg)
+    --------------------
+    --  This will reduce the pw of the shield when hit
+    
+    self.hitOn = self.timer
+    
+    if dmg > self.pw then
+        -- over hit
+        dmg = dmg - self.pw
+        self.pw = 0
+        return dmg
+    end
+    
+    self.pw = self.pw - dmg
+    return 0
 end
 
 

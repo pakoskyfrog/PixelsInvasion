@@ -36,6 +36,7 @@ Here is the list of steps I will follow :
     - Starfield game background
     - Better placement on squadron generation
     - Wall/neighbor foe collision
+    - Basic Event driven collisions system
 
 ## 4/ Credits
 

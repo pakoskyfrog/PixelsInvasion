@@ -35,6 +35,8 @@ function CShape:create(sender, kind, N)
     
     Shape:generate()
     
+    Shape.uid = Apps:getNextID()
+    
     return Shape
 end
 

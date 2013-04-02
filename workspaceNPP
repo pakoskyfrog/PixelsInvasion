@@ -1,0 +1,36 @@
+<NotepadPlus>
+    <Project name="Pxl Inva">
+        <Folder name="backgrounds">
+            <File name="sources\backgrounds\bgmenu.lua" />
+            <File name="sources\backgrounds\stars.lua" />
+        </Folder>
+        <Folder name="entities">
+            <File name="sources\entities\foe.lua" />
+            <File name="sources\entities\projectils.lua" />
+            <File name="sources\entities\pwup.lua" />
+            <File name="sources\entities\shape.lua" />
+            <File name="sources\entities\shield.lua" />
+            <File name="sources\entities\ship.lua" />
+            <File name="sources\entities\squadron.lua" />
+        </Folder>
+        <Folder name="gen">
+            <File name="sources\gen\conected.lua" />
+        </Folder>
+        <Folder name="gui">
+            <File name="sources\gui\actions.lua" />
+            <File name="sources\gui\button.lua" />
+            <File name="sources\gui\choice.lua" />
+            <File name="sources\gui\hud.lua" />
+        </Folder>
+        <Folder name="lib">
+            <File name="sources\lib\colorData.lua" />
+        </Folder>
+        <File name="sources\apps.lua" />
+        <File name="sources\game.lua" />
+        <File name="sources\mainmenu.lua" />
+        <File name="sources\pause.lua" />
+        <File name="conf.lua" />
+        <File name="main.lua" />
+        <File name="README.md" />
+    </Project>
+</NotepadPlus>

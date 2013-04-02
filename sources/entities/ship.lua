@@ -38,6 +38,11 @@ function CShip:create(N)
     Ship.shield = CShield:create(Ship, N*3.66, 0.1)
     Ship.hp = N*2
     Ship.Hp = Ship.hp
+    Ship.uid = Apps:getNextID()
+    
+    -- Ship.events = {} -- list of events attached to the ship
+    -- doesn't have one : too much movements
+    -- collisions are handled in the update func
     
     return Ship
 end

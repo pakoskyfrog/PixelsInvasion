@@ -35,6 +35,7 @@ function CSquadron:create(sender, model, lineList, Nmax)
     
     local Squadron = {}
     setmetatable(Squadron, CSquadron)
+    Squadron.uid = Apps:getNextID()
     
     local grad = {"regular"}
     local rdc = function () return 60 + math.random(195) end
@@ -46,7 +47,7 @@ function CSquadron:create(sender, model, lineList, Nmax)
     Squadron.foes  = {}
     
     -- nbr of foes puttable in a line :
-    local dw = model.pxlSize*model.shape.width*2
+    local dw = model.pxlSize*math.max(model.shape.width, 5)*2
     local ni = math.floor(0.75*Apps.w/(dw))
     local NN = Nmax or ni-1
     local dx = 0.75*Apps.w / NN
@@ -84,10 +85,21 @@ function CSquadron:create(sender, model, lineList, Nmax)
                 Squadron.foes[#Squadron.foes].voisRight = foe
             end
             
+            -- Event-driven
+            if not foe.events then foe.events = {} end
+            if model.dir == 'R' and j==NN then
+                foe.events[#foe.events+1] = {Apps.state.timing+(Apps.w-foe.pos.x)/foe.speed[1], foe, foe.collide}
+            end
+            if model.dir == 'L' and j==1 then
+                foe.events[#foe.events+1] = {Apps.state.timing+(-foe.pos.x)/foe.speed[1], foe, foe.collide}
+            end
+
+            -- table.sort(foe.event, function()  end)
+            
             Squadron.foes[#Squadron.foes+1] = foe
         end
+        
     end
-    
     
     
     return Squadron
